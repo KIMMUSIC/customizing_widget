@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Hello, World!</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div id="container">
+        <div id="frame">
+            <div id = "circle">
+                <div class="dot red" onclick="closeEvent()"></div>
+                <div class="dot yellow" onclick="closeEvent()"></div>
+                <div class="dot green" onclick="closeEvent()"></div>
+            </div>
+        </div>
+        
+        <div>
+            <input type="text" placeholder="Please select a file" id="txt-filename" disabled="disabled" />
+            <input type="button" value="Choose a file" id="btn-select-file" />
+            <div onclick="addIcon()">추가</div>
+            <div onclick="test()">test</div>
+            <div style="height:500px;width:500;background-color:blue;" id="mainsection">
+                <img src="http://placehold.it/100x100" id="cursorImage" style="position: absolute;"ondragstart="return false;"/>
+            </div>
+            <div onclick="al()">addli</div>
+            <div onclick="rl()">remli</div>
+            <div onclick="download()">다운로드</div>
+            <div onclick="play()">play</div>
+            <div onclick="pause()">pasuse</div>
+        </div>
+
+
+
+        <div class="wrapper">
+            <div class="top-bar">
+              <span>Now Playing</span>
+            </div>
+            <div class="img-area">
+              <img src="" alt="">
+            </div>
+            <div class="song-details">
+              <p class="name"></p>
+              <p class="artist"></p>
+            </div>
+            <div class="progress-area">
+              <div class="progress-bar">
+                <audio id="main-audio" src=""></audio>
+              </div>
+              <div class="song-timer">
+                <span class="current-time">0:00</span>
+                <span class="max-duration">0:00</span>
+              </div>
+            </div>
+            <div class="controls">
+              <div id="repeat-plist" class="" title="Playlist looped">r</div>
+              <div id="prev" class="">s</div>
+              <div class="play-pause">
+                <div class=" play">▶</div>
+              </div>
+              <div id="next" class="">s</div>
+              <div id="more-music" class="">q</div>
+            </div>
+            <div class="music-list">
+              <div class="header">
+                <div class="row">
+                  <div class= "list ">q</div>
+                  <span>Music list</span>
+                </div>
+                <div id="close" class="">c</div>
+              </div>
+              <ul>
+                <!-- here li list are coming from js -->
+              </ul>
+            </div>
+          </div>
+
+        <script src="./renderer.js"></script>
+    
+</div>
+    </body>
+</html>
