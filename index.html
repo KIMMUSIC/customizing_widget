@@ -3,6 +3,8 @@
     <head>
         <title>Hello, World!</title>
         <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&amp;display=swap">
     </head>
     <body>
         <div id="container">
@@ -12,21 +14,23 @@
                 <div class="dot yellow" onclick="closeEvent()"></div>
                 <div class="dot green" onclick="closeEvent()"></div>
             </div>
+            <div id="title">Make Your Home</div>
         </div>
         
         <div>
             <input type="text" placeholder="Please select a file" id="txt-filename" disabled="disabled" />
             <input type="button" value="Choose a file" id="btn-select-file" />
             <div onclick="addIcon()">추가</div>
-            <div onclick="test()">test</div>
-            <div style="height:500px;width:500;background-color:blue;" id="mainsection">
-                <img src="http://placehold.it/100x100" id="cursorImage" style="position: absolute;"ondragstart="return false;"/>
+            <div onclick="al()">편집</div>
+            <div onclick="rl()">적용</div>
+            <div onclick="addMusic()">뮤직플레이어</div>
+            <div  id="mainsection">
+                
             </div>
-            <div onclick="al()">addli</div>
-            <div onclick="rl()">remli</div>
+            
         </div>
 
-        <div onclick="addMusic()">뮤직플레이어</div>
+        
 
         
 

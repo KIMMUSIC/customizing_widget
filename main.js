@@ -8,7 +8,7 @@ const createWindow = () => {
     const win = new BrowserWindow({
         fullscreen: false,
         autoHideMenuBar: true,
-        width: 1080, height:700, frame:false, transparent: false,useContentSize:true,
+        width: 1080, height:700, frame:false, transparent: true,useContentSize:true,
         webPreferences: { 
             nodeIntegration: true,
             enableRemoteModule: true,

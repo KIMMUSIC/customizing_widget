@@ -4,7 +4,8 @@ const {app, nativeImage} = require('electron').remote;
 const path = require('path')
 const fs = require('fs')
 const {ipcRenderer} = require('electron')
-const ytdl = require('ytdl-core')
+const ytdl = require('ytdl-core');
+const { clear } = require('console');
 let imgid = 0;
 
 const desktopPath = app.getPath('desktop');
@@ -155,7 +156,12 @@ progressArea,
 progressBar,
 musicList,
 moreMusicBtn,
-closemoreMusic;
+closemoreMusic,
+volIcon,
+volBox,
+volumeRange,
+volumeDown,
+volumeUp;
 
 const savePath = path.join("save");
 const saveFileName = path.join(savePath, "playlist");
@@ -169,15 +175,18 @@ isMusicPaused = true;
 
 function addMusic(){
   let musicplayer = `<div class="wrapper" id="wrapper" style="position:absolute">
-  <div class="top-bar">
-    <span>Now Playing</span>
-  </div>
   <div class="img-area">
     <img src="" alt="">
   </div>
   <div class="song-details">
     <p class="name"></p>
-    <p class="artist"></p>
+  </div>
+  <div class="controls">
+      <i id="prev" class="material-icons">skip_previous</i>
+      <div class="play-pause">
+        <i class="material-icons play">play_arrow</i>
+      </div>
+      <i id="next" class="material-icons">skip_next</i>
   </div>
   <div class="progress-area">
     <div class="progress-bar">
@@ -189,29 +198,33 @@ function addMusic(){
     </div>
   </div>
   <div class="controls">
-    <div id="repeat-plist" class="" title="Playlist looped">r</div>
-    <div id="prev" class="">s</div>
-    <div class="play-pause">
-      <div class=" play">▶</div>
-    </div>
-    <div id="next" class="">s</div>
-    <div id="more-music" class="">q</div>
+      <i id="repeat-plist" class="material-icons" title="Playlist looped">repeat</i>
+      <i class="material-icons volume" onclick="handleVolume()">volume_up</i>
+      <div class="volume-box">
+            <span class="volume-down"><i class="material-icons">remove</i></span>
+            <input type="range" class="volume-range" step="1" value="5" min="0" max="100"
+                oninput="dragvolume(this.value)">
+            <span class="volume-up"><i class="material-icons">add</i></span>
+        </div>
+      <i id="more-music" class="material-icons">queue_music</i>
   </div>
   <div class="music-list">
-    <div class="header">
-      <div class="row">
-        <div class= "list ">q</div>
-        <span>Music list</span>
+      <div class="header">
+        <div class="row">
+          <i class= "list material-icons">queue_music</i>
+          <span>Music list</span>
+        </div>
+        <i id="close" class="material-icons">close</i>
       </div>
-      <div id="close" class="">c</div>
+      <ul>
+        <!-- here li list are coming from js -->
+      </ul>
+      <input type="text" id="MusicLink" name="MusicLink"><div onclick="musicadd()">추가</div>
     </div>
-    <ul>
-      <!-- here li list are coming from js -->
-    </ul>
-    <input type="text" id="MusicLink" name="MusicLink"><div onclick="musicadd()">추가</div>
   </div>
 </div>`
  
+
 
 document.getElementById("mainsection").insertAdjacentHTML("beforeend", musicplayer);
 
@@ -228,6 +241,14 @@ musicList = wrapper.querySelector(".music-list"),
 moreMusicBtn = wrapper.querySelector("#more-music"),
 closemoreMusic = musicList.querySelector("#close");
 
+volIcon = document.querySelector('.volume')
+volBox = document.querySelector('.volume-box')
+volumeRange = document.querySelector('.volume-range')
+volumeDown = document.querySelector('.volume-down')
+volumeUp = document.querySelector('.volume-up')
+
+
+
 mainAudio.volume = 0.05;
   loadMusic(musicIndex);
   playingSong(); 
@@ -241,7 +262,6 @@ for (let i = 0; i < allMusic.length; i++) {
   let liTag = `<li li-index="${i + 1}">
                 <div class="row">
                   <span>${allMusic[i].name}</span>
-                  <p>${allMusic[i].artist}</p>
                 </div>
                 <span id="${allMusic[i].src}" class="audio-duration">3:40</span>
                 <audio class="${allMusic[i].src}" src="songs/${allMusic[i].src}.mp3"></audio>
@@ -264,6 +284,9 @@ for (let i = 0; i < allMusic.length; i++) {
 
   
 }
+volumeDown.addEventListener('click', handleVolumeDown);
+volumeUp.addEventListener('click', handleVolumeUp);
+
 
 
 
@@ -382,8 +405,41 @@ closemoreMusic.addEventListener("click", ()=>{
 
 }
 
-// -------------------
 
+// -------------------
+var timevar;
+function handleVolume() {
+  volIcon.classList.toggle('active')
+  volBox.classList.toggle('active')
+  document.getElementsByClassName("volume")[0].setAttribute("style","display:none")
+}
+
+function timeout(){
+  volIcon.classList.toggle('active')
+  volBox.classList.toggle('active')
+  document.getElementsByClassName("volume")[0].setAttribute("style","display:block")
+}
+
+
+function handleVolumeDown() {
+  clearTimeout(timevar)
+  volumeRange.value = Number(volumeRange.value) - 10
+  mainAudio.volume = volumeRange.value / 100
+  timevar = setTimeout(timeout, 2000);
+}
+function handleVolumeUp() {
+  clearTimeout(timevar)
+  volumeRange.value = Number(volumeRange.value) + 10
+  mainAudio.volume = volumeRange.value / 100
+
+  timevar = setTimeout(timeout, 2000);
+}
+
+function dragvolume(e){
+  clearTimeout(timevar)
+  mainAudio.volume = e/100
+  timevar = setTimeout(timeout, 2000);
+}
 
 
 
@@ -403,14 +459,14 @@ function loadMusic(indexNumb){
 //play music function
 function playMusic(){
   wrapper.classList.add("paused");
-  playPauseBtn.querySelector("div").innerText = "⏸";
+  playPauseBtn.querySelector("i").innerText = "pause";
   mainAudio.play();
 }
 
 //pause music function
 function pauseMusic(){
   wrapper.classList.remove("paused");
-  playPauseBtn.querySelector("div").innerText = "▶";
+  playPauseBtn.querySelector("i").innerText = "play_arrow";
   mainAudio.pause();
 }
 
@@ -494,7 +550,6 @@ async function musicadd(){
   let liTag = `<li li-index="${len}">
                 <div class="row">
                   <span>${allMusic[len-1].name}</span>
-                  <p>${allMusic[len-1].artist}</p>
                 </div>
                 <span id="${allMusic[len-1].src}" class="audio-duration">3:40</span>
                 <audio class="${allMusic[len-1].src}" src="songs/${allMusic[len-1].src}.mp3"></audio>
