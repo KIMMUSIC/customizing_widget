@@ -244,4 +244,8 @@ ul li.playing{
   color: var(--violet);
 }
 
+.controls{
+  margin: 40px 0 5px 0;
+}
+
 
